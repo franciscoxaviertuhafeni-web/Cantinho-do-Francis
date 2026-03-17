@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cantinho do Francis - Loja Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; margin:0; background:#f4f6f8; color:#333; }
+    header { background:#0a7cff; color:white; padding:30px 20px; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,0.1); }
+    header img { max-height:80px; }
+
+    .topbar { display:flex; justify-content:center; padding:15px; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.05); }
+    .topbar input { width:80%; padding:12px; border-radius:25px; border:1px solid #ccc; font-size:1em; transition:border 0.2s; }
+    .topbar input:focus { border:1px solid #0a7cff; outline:none; }
+
+    .banner { text-align:center; margin:20px 0; }
+    .banner img { width:90%; max-width:1200px; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+
+    .categoria-section { margin:30px 20px; }
+    .categoria-section h2 { color:#0a7cff; margin-bottom:15px; font-size:1.5em; }
+
+    .container { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap:25px; }
+    .produto { background:white; padding:20px; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
+    .produto:hover { transform:translateY(-6px); box-shadow:0 12px 20px rgba(0,0,0,0.15); }
+    .produto img { width:100%; border-radius:10px; object-fit:cover; height:220px; }
+    .produto h3 { margin:12px 0 8px; font-size:1.2em; color:#0a7cff; }
+    .produto p { margin:6px 0; font-weight:bold; color:#333; }
+
+    button { background:#25D366; color:white; border:none; padding:12px 18px; border-radius:25px; cursor:pointer; font-weight:bold; transition:background 0.2s, transform 0.2s; }
+    button:hover { background:#1ebe5d; transform:scale(1.05); }
+
+    .loja-button { background:#ff9800; padding:16px; margin:25px auto; display:block; width:230px; font-weight:bold; font-size:1.1em; border-radius:25px; transition:background 0.2s, transform 0.2s; }
+    .loja-button:hover { background:#e68a00; transform:scale(1.05); }
+
+    .form-container { display:none; background:white; padding:30px; border-radius:20px; margin:20px auto; box-shadow:0 4px 12px rgba(0,0,0,0.1); max-width:600px; }
+    .form-container h2 { text-align:center; color:#0a7cff; margin-bottom:20px; }
+    .form-container input, .form-container textarea { width:100%; padding:14px; margin:10px 0; border-radius:12px; border:1px solid #ccc; font-size:1em; }
+    .form-container input:focus, .form-container textarea:focus { border:1px solid #0a7cff; outline:none; }
+    .form-container button { background:#0a7cff; color:white; padding:14px; border:none; border-radius:25px; cursor:pointer; font-weight:bold; font-size:1em; margin-top:15px; transition:background 0.2s, transform 0.2s; width:100%; }
+    .form-container button:hover { background:#0860d8; transform:scale(1.03); }
+
+    footer { text-align:center; padding:25px; background:#222; color:white; margin-top:40px; font-size:0.95em; }
+    footer a { color:#ff9800; text-decoration:none; }
+    footer a:hover { text-decoration:underline; }
+
+    @media (max-width:600px) { .produto img { height:180px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Logo Cantinho do Francis">
+</header>
+
+<div class="topbar">
+  <input type="text" placeholder="Pesquisar produto...">
+</div>
+
+<div class="banner">
+  <img src="a_screenshot_of_cantinho_do_francis_an_e_commer.png" alt="Banner Cantinho do Francis">
+</div>
+
+<div class="categoria-section">
+  <h2>Promoções</h2>
+  <div class="container" id="produtosPromocao"></div>
+</div>
+
+<div class="categoria-section">
+  <h2>Destaques</h2>
+  <div class="container" id="produtosDestaque"></div>
+</div>
+
+<div class="categoria-section">
+  <h2>Todos os Produtos</h2>
+  <div class="container" id="produtosContainer"></div>
+</div>
+
+<button class="loja-button" onclick="abrirFormulario()">Criar Minha Loja</button>
+
+<div class="form-container" id="formLoja">
+  <h2>Crie sua loja</h2>
+  <input type="text" id="nomeCliente" placeholder="Seu Nome" required>
+  <input type="email" id="emailCliente" placeholder="Seu Email" required>
+  <input type="tel" id="telefoneCliente" placeholder="Telefone / WhatsApp" required>
+  <textarea id="produtosCliente" placeholder="Liste até 20 produtos no formato: Nome|Preço (Kz)|Estoque|URL da Imagem" rows="10"></textarea>
+  <p>Pagamento para ativação da loja: 5.000 Kz</p>
+  <button onclick="gerarLoja()">Pagar e Criar Minha Loja</button>
+</div>
+
+<footer>
+  <p>Contacto WhatsApp: <a href="https://wa.me/244934685735" target="_blank">+244 934685735</a> | Redes sociais: <a href="Francis Francis">Facebook</a> | <a href="#">Instagram</a></p>
+  <p>&copy; 2026 Cantinho do Francis. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+function comprar(produto) {
+  let numero = "244934685735";
+  let mensagem = `Olá, quero comprar o produto: ${produto}`;
+  let url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, '_blank');
+}
+
+function abrirFormulario() {
+  document.getElementById('formLoja').style.display = 'block';
+  window.scrollTo(0, document.body.scrollHeight);
+}
+
+function gerarLoja() {
+  let nome = document.getElementById('nomeCliente').value;
+  let email = document.getElementById('emailCliente').value;
+  let telefone = document.getElementById('telefoneCliente').value;
+  let produtos = document.getElementById('produtosCliente').value;
+
+  if (!nome || !email || !telefone) {
+    alert('Por favor, preencha os campos obrigatórios');
+    return;
+  }
+
+  let produtosArray = produtos.split('\n').slice(0,20);
+  let container = document.getElementById('produtosContainer');
+  container.innerHTML = '';
+
+  produtosArray.forEach(function(item) {
+    let partes = item.split('|');
+    let nomeProd = partes[0] ? partes[0].trim() : 'Produto';
+    let preco = partes[1] ? partes[1].trim() + ' Kz' : 'Preço a combinar';
+    let estoque = partes[2] ? partes[2].trim() : '0';
+    let img = partes[3] ? partes[3].trim() : 'https://via.placeholder.com/250';
+
+    let div = document.createElement('div');
+    div.className = 'produto';
+    div.innerHTML = `<img src='${img}' alt='${nomeProd}'><h3>${nomeProd}</h3><p>${preco} - Estoque: ${estoque}</p><button onclick="comprar('${nomeProd}')">Comprar no WhatsApp</button>`;
+    container.appendChild(div);
+  });
+
+  alert('Sua loja foi criada! Envie o pagamento de 5.000 Kz pelo WhatsApp.');
+  let numero = "244934685735";
+  let mensagem = `Pedido de criação de loja de ${nome}. Valor: 5.000 Kz. Produtos: ${produtosArray.join(', ')}`;
+  let url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, '_blank');
+  document.getElementById('formLoja').style.display = 'none';
+}
+
+const produtosPromocao = [
+  {nome:'Tênis Promo', preco:'10.000', estoque:'5', img:'https://via.placeholder.com/250'},
+  {nome:'Camisa Promo', preco:'5.500', estoque:'7', img:'https://via.placeholder.com/250'}
+];
+const produtosDestaque = [
+  {nome:'Camisa Destaque', preco:'6.500', estoque:'8', img:'https://via.placeholder.com/250'},
+  {nome:'Boné Destaque', preco:'3.500', estoque:'12', img:'https://via.placeholder.com/250'}
+];
+const produtosTodos = [
+  {nome:'Tênis Moderno', preco:'12.000', estoque:'10', img:'https://via.placeholder.com/250'},
+  {nome:'Calça Jeans', preco:'8.000', estoque:'6', img:'https://via.placeholder.com/250'},
+  {nome:'Jaqueta Casual', preco:'15.000', estoque:'4', img:'https://via.placeholder.com/250'},
+  {nome:'Mochila Escolar', preco:'7.500', estoque:'9', img:'https://via.placeholder.com/250'},
+  {nome:'Relógio Moderno', preco:'18.000', estoque:'3', img:'https://via.placeholder.com/250'}
+];
+
+function carregarProdutos(lista, containerId) {
+  const container = document.getElementById(containerId);
+  lista.forEach(p => {
+    let div = document.createElement('div');
+    div.className='produto';
+    div.innerHTML=`<img src='${p.img}' alt='${p.nome}'><h3>${p.nome}</h3><p>${p.preco} Kz - Estoque: ${p.estoque}</p><button onclick="comprar('${p.nome}')">Comprar no WhatsApp</button>`;
+    container.appendChild(div);
+  });
+}
+
+carregarProdutos(produtosPromocao, 'produtosPromocao');
+carregarProdutos(produtosDestaque, 'produtosDestaque');
+carregarProdutos(produtosTodos, 'produtosContainer');
+</script>
+
+</body>
+</html>
